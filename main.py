@@ -23,8 +23,18 @@ class NeuralNetwork:
         a2 = self.sigmoid(z2)
         return a1, a2
 
-    def calculate_loss():
-        pass
+    def calculate_loss(self, label, prediction):
+        """
+        label = the correct value inside of the image
+        prediction = array of predictions from the model
+        """
+        one_hot = np.zeros((10, 1))
+        one_hot[label] = 1
+        loss = np.mean((prediction - one_hot) ** 2)
+        return loss
+
+
+        
 
 
 (train_images, train_labels), _ = keras.datasets.mnist.load_data() # Load data
