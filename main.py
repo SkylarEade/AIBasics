@@ -10,6 +10,9 @@ class NeuralNetwork:
 
     def sigmoid(self, arr):
         return 1/ (1+np.exp(-arr)) # Sigmoid function for compressing the weights into 0 - 1 range
+    
+    def relu(self, z):
+        return np.maximum(0, z)
 
     def forward_propagation(self, X):
         """
@@ -18,10 +21,10 @@ class NeuralNetwork:
         b = Bias
         """
         z1 = self.W1.T @ X + self.b1
-        a1 = self.sigmoid(z1)
+        a1 = self.relu(z1)
         z2 = self.W2.T @ a1 + self.b2
         a2 = self.sigmoid(z2)
-        return a1, a2
+        return a1, a2, z1
 
     def calculate_loss(self, y_one_hot, prediction):
         """
@@ -30,13 +33,19 @@ class NeuralNetwork:
         """
         return np.mean((prediction - y_one_hot) ** 2)
         
-    
-    def backwards_propagation(self, X, y_one_hot, a1, a2):
+    def relu_derivative(self, z):
+        """
+        Relu derivative is simply a 1 or 0 depending on if z is greater than 0. dz = 1 if z > 0 else 0
+        """
+        return (z > 0).astype(float)
+
+    def backwards_propagation(self, X, y_one_hot, a1, a2, z1):
         """
         Backwards propagation will determine how to tweak the weights and biases so the model can learn from its mistakes
         a1, a2 = the activations of the neuron layers
         X = 784 x 1 array representing the 28 x 28 pixel image
-        label = actual value presented in the image
+        y_one_hot = actual value presented in the image in the form of an array where the number's index has the value 1
+        z1 = included for derivative calculation for relu
 
         Derivative of our MSE Loss function (L = (1/n) * summation(a2 - y)^2) = (2/n) x (a2 - y)
         We will simply absorb the 2/n for now
@@ -61,7 +70,7 @@ class NeuralNetwork:
 
         # Calculate derivative of weight 1
         dL_da1 = self.W2 @ dL_dz2
-        dL_dz1 = dL_da1 * a1 * (1 - a1) # doubles as dL_db1 because when derived b becomes 1
+        dL_dz1 = dL_da1 * self.relu_derivative(z1) # doubles as dL_db1 because when derived b becomes 1
         dL_dW1 = X @ dL_dz1.T
         return dL_dW1, dL_dz1, dL_dW2, dL_dz2
 
@@ -100,11 +109,11 @@ class NeuralNetwork:
                 img = image.reshape(784, 1) / 255
                 y_one_hot = np.zeros((10, 1))
                 y_one_hot[label] = 1
-                a1, a2 = self.forward_propagation(img)
+                a1, a2, z1 = self.forward_propagation(img)
                 guess = np.argmax(a2)
                 correct_count += (1 if guess == label else 0)
                 loss_sum += self.calculate_loss(y_one_hot, a2)
-                dW1, db1, dW2, db2 = self.backwards_propagation(img, y_one_hot, a1, a2)
+                dW1, db1, dW2, db2 = self.backwards_propagation(img, y_one_hot, a1, a2, z1)
                 dW1_sum += dW1
                 dW2_sum += dW2
                 db1_sum += db1
