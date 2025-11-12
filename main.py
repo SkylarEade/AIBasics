@@ -3,10 +3,10 @@ import numpy as np
 
 class NeuralNetwork:
     def __init__(self):
-        self.W1 = np.random.randn(784,128) * 0.01 # Weight initialziation
-        self.W2 = np.random.randn(128, 10) * 0.01
-        self.b1 = np.zeros((128, 1)) # Bias initialization
-        self.b2 = np.zeros((10, 1))
+        self.W1 = np.random.randn(784,128) * 0.1 # Weight initialziation
+        self.W2 = np.random.randn(128, 10) * 0.1
+        self.b1 = np.random.randn(128, 1) * 0.1 # Bias initialization
+        self.b2 = np.random.randn(10, 1) * 0.1
 
     def sigmoid(self, arr):
         return 1/ (1+np.exp(-arr)) # Sigmoid function for compressing the weights into 0 - 1 range
