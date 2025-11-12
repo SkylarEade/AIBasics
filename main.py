@@ -5,8 +5,8 @@ class NeuralNetwork:
     def __init__(self):
         self.W1 = np.random.randn(784,128) * 0.1 # Weight initialziation
         self.W2 = np.random.randn(128, 10) * 0.1
-        self.b1 = np.random.randn(128, 1) * 0.1 # Bias initialization
-        self.b2 = np.random.randn(10, 1) * 0.1
+        self.b1 = np.zeros((128, 1)) # Bias initialization
+        self.b2 = np.zeros((10, 1))
 
     def sigmoid(self, arr):
         return 1/ (1+np.exp(-arr)) # Sigmoid function for compressing the weights into 0 - 1 range
@@ -86,7 +86,6 @@ class NeuralNetwork:
     
     def train(self, X_train, y_train, epochs, learning_rate=0.01, batch_size=32):
         for epoch in range(epochs):
-            batch = 1
             epoch_loss = 0
             epoch_correct = 0
             loss_sum = 0
@@ -111,8 +110,6 @@ class NeuralNetwork:
                 db1_sum += db1
                 db2_sum += db2
                 if (j+1) % batch_size == 0: # Every 32 predictions change batch and report total loss
-                    #print (f"Batch: {batch}, Total Loss: {loss_sum}, Correct Guesses: {correct_count}/32")
-                    batch += 1
                     epoch_loss += loss_sum
                     epoch_correct += correct_count
                     loss_sum = 0
@@ -132,9 +129,6 @@ class NeuralNetwork:
 (x_train, y_train),(x_test, y_test) = keras.datasets.mnist.load_data()
 nn = NeuralNetwork()
 epochs = 10
-learning_rate = 0.01
+learning_rate = 0.1
 batch_size = 32
 nn.train(x_train, y_train, epochs, learning_rate, batch_size)
-
-
-
