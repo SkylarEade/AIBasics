@@ -75,15 +75,66 @@ class NeuralNetwork:
         self.b1 -= db1 * learning_rate
         self.b2 -= db2 * learning_rate
 
+    def push_update_weight(self, dW1_sum, dW2_sum, db1_sum, db2_sum, size, learning_rate):
+        dW1_avg = dW1_sum / size
+        dW2_avg = dW2_sum / size
+        db1_avg = db1_sum / size
+        db2_avg = db2_sum / size
+        
+        self.update_weights(dW1_avg, db1_avg, dW2_avg, db2_avg, learning_rate)
+        return (np.zeros_like(dW1_sum), np.zeros_like(dW2_sum), np.zeros_like(db1_sum), np.zeros_like(db2_sum))
+    
+    def train(self, X_train, y_train, epochs, learning_rate=0.01, batch_size=32):
+        for epoch in range(epochs):
+            batch = 1
+            epoch_loss = 0
+            epoch_correct = 0
+            loss_sum = 0
+            correct_count = 0
+            dW1_sum = 0
+            dW2_sum = 0
+            db1_sum = 0
+            db2_sum = 0
+            for j in range(len(X_train)):
+                image = X_train[j]
+                label = y_train[j]
+                img = image.reshape(784, 1) / 255
+                y_one_hot = np.zeros((10, 1))
+                y_one_hot[label] = 1
+                a1, a2 = self.forward_propagation(img)
+                guess = np.argmax(a2)
+                correct_count += (1 if guess == label else 0)
+                loss_sum += self.calculate_loss(y_one_hot, a2)
+                dW1, db1, dW2, db2 = self.backwards_propagation(img, y_one_hot, a1, a2)
+                dW1_sum += dW1
+                dW2_sum += dW2
+                db1_sum += db1
+                db2_sum += db2
+                if (j+1) % batch_size == 0: # Every 32 predictions change batch and report total loss
+                    #print (f"Batch: {batch}, Total Loss: {loss_sum}, Correct Guesses: {correct_count}/32")
+                    batch += 1
+                    epoch_loss += loss_sum
+                    epoch_correct += correct_count
+                    loss_sum = 0
+                    dW1_sum, dW2_sum, db1_sum, db2_sum = self.push_update_weight(dW1_sum, dW2_sum, db1_sum, db2_sum, batch_size, learning_rate)
+                    correct_count = 0
+            if (len(X_train) % batch_size) != 0: # Get any remnant changes that didnt fit into full final batch
+                size = (j % batch_size) + 1
+                dW1_sum, dW2_sum, db1_sum, db2_sum = self.push_update_weight(dW1_sum, dW2_sum, db1_sum, db2_sum, size, learning_rate)
 
-training_data = keras.datasets.mnist.load_data() # Load data
+            print(f"\n{'='*60}")
+            print(f"Epoch {epoch+1}/{epochs} completed:\nAverage Loss: {(epoch_loss/len(X_train)):.4f}\nAccuracy: {(epoch_correct/len(X_train) * 100):.2f}%")
+            print(f"{'='*60}\n")
 
+
+    
+
+(x_train, y_train),(x_test, y_test) = keras.datasets.mnist.load_data()
 nn = NeuralNetwork()
+epochs = 10
+learning_rate = 0.01
+batch_size = 32
+nn.train(x_train, y_train, epochs, learning_rate, batch_size)
 
-for image, label in training_data:
-    y_one_hot = np.zeros((10, 1))
-    y_one_hot[label] = 1
-    a1, a2 = nn.forward_propogation(y_one_hot)
-    loss = nn.calculate_loss(y_one_hot, a2)
-    dW1, db1, dW2, db2 = nn.backwards_propagation(image, y_one_hot, a1, a2)
-    nn.update_weights(dW1, db1, dW2, db2, learning_rate=0.01)
+
+
