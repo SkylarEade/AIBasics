@@ -102,7 +102,7 @@ class NeuralNetwork:
 
     def update_weights(self, dW1, db1, dW2, db2, dW3, db3, learning_rate):
         """
-        Use Adam as optimizer
+        Use Adam (Adaptive Moment Estimation) as optimizer - replacing old version Stotchastic Gradient Descent (SGD)
         dW1, dW2, db1, db2 = gradients of weights and biases calculated in backwards_propagation
         learning_rate = the constant used in calculating the changes to the weights and biases
         """
@@ -142,7 +142,7 @@ class NeuralNetwork:
         self.update_weights(dW1_avg, db1_avg, dW2_avg, db2_avg, dW3_avg, db3_avg, learning_rate)
         return (np.zeros_like(dW1_sum), np.zeros_like(dW2_sum), np.zeros_like(dW3_sum), np.zeros_like(db1_sum), np.zeros_like(db2_sum),np.zeros_like(db3_sum))
     
-    def train(self, X_train, y_train, epochs, learning_rate=0.01, batch_size=32):
+    def train(self, X_train, y_train, epochs, learning_rate=0.001, batch_size=32):
         for epoch in range(epochs):
             epoch_loss = 0
             epoch_correct = 0
