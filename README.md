@@ -22,4 +22,9 @@ To train run:
 ```
 python train.py
 ```
-
+To run test on unseen data run:
+```
+python test.py
+# OR TO VISUALIZE THIS TEST (on ten random samples):
+python test.py -visualize
+```
