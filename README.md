@@ -2,6 +2,9 @@
 
 **Starter project for understanding basic machine learning structure and algorithms**
 
+### What it Does
+Trains and saves a neural network that can detect what number is depicted in a handwritten image
+
 ### Lessons learned
 - Fundamental concepts like weights and biases
 - Forward propagation (matrix multiplication, transposition and activation functions like sigmoid and relu)
