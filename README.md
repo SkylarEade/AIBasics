@@ -29,3 +29,4 @@ python test.py
 # OR TO VISUALIZE THIS TEST (on ten random samples):
 python test.py -visualize
 ```
+![Visual of Predictions](image.png)
