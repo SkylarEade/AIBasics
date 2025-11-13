@@ -25,7 +25,6 @@ python train.py
 To run test on unseen data run:
 ```
 python test.py
-<<<<<<< HEAD
 # OR TO VISUALIZE THIS TEST (on ten random samples):
 python test.py -visualize
 ```
