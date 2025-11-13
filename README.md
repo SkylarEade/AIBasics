@@ -11,6 +11,7 @@ Trains and saves a neural network that can detect what number is depicted in a h
 - Backward propagation (derivatives and chain rule)
 - Weight updating using the derivative calculations
 - Gradient building using Mini-Batch gradients
+- Adam vs SGD optimizers
 
 ### How to run
 ```
@@ -28,4 +29,5 @@ python test.py
 # OR TO VISUALIZE THIS TEST (on ten random samples):
 python test.py -visualize
 ```
-<img width="1495" height="593" alt="image" src="https://github.com/user-attachments/assets/45d0786d-31bc-41fc-95d9-3f6b3406b1b2" />
+<img width="1487" height="589" alt="image" src="https://github.com/user-attachments/assets/089f9df5-8b64-4d41-b962-5a3fec653e70" />
+
