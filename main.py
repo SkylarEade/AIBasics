@@ -9,6 +9,24 @@ class NeuralNetwork:
         self.b2 = np.zeros((128, 1))
         self.b3 = np.zeros((10, 1))
 
+        # Initialize momentum and variance for Adam implementation
+        self.time_step = 0
+        self.momentum = 0.9
+        self.variance = 0.999
+        self.stability = 1e-8
+        self.W1_m = np.zeros((784, 512))
+        self.W1_v = np.zeros((784, 512))
+        self.W2_m = np.zeros((512, 128))
+        self.W2_v = np.zeros((512, 128))
+        self.W3_m = np.zeros((128, 10))
+        self.W3_v = np.zeros((128, 10))
+        self.b1_m = np.zeros((512, 1))
+        self.b1_v = np.zeros((512, 1))
+        self.b2_m = np.zeros((128, 1))
+        self.b2_v = np.zeros((128, 1))
+        self.b3_m = np.zeros((10, 1))
+        self.b3_v = np.zeros((10, 1))
+
     def sigmoid(self, arr):
         return 1/ (1+np.exp(-arr)) # Sigmoid function for compressing the weights into 0 - 1 range
     
@@ -84,15 +102,34 @@ class NeuralNetwork:
 
     def update_weights(self, dW1, db1, dW2, db2, dW3, db3, learning_rate):
         """
+        Use Adam as optimizer
         dW1, dW2, db1, db2 = gradients of weights and biases calculated in backwards_propagation
         learning_rate = the constant used in calculating the changes to the weights and biases
         """
-        self.W1 -= dW1 * learning_rate
-        self.W2 -= dW2 * learning_rate
-        self.W3 -= dW3 * learning_rate
-        self.b1 -= db1 * learning_rate
-        self.b2 -= db2 * learning_rate
-        self.b3 -= db3 * learning_rate
+        self.time_step += 1
+        t = self.time_step
+        self.W1_m = self.momentum * self.W1_m + (1 - self.momentum) * dW1 # Update parameter momentum
+        self.W2_m = self.momentum * self.W2_m + (1 - self.momentum) * dW2
+        self.W3_m = self.momentum * self.W3_m + (1 - self.momentum) * dW3
+        self.b1_m = self.momentum * self.b1_m + (1 - self.momentum) * db1 
+        self.b2_m = self.momentum * self.b2_m + (1 - self.momentum) * db2
+        self.b3_m = self.momentum * self.b3_m + (1 - self.momentum) * db3
+
+        self.W1_v = self.variance * self.W1_v + (1 - self.variance) * dW1**2 # Update parameter variance
+        self.W2_v = self.variance * self.W2_v + (1 - self.variance) * dW2**2
+        self.W3_v = self.variance * self.W3_v + (1 - self.variance) * dW3**2
+        self.b1_v = self.variance * self.b1_v + (1 - self.variance) * db1**2 
+        self.b2_v = self.variance * self.b2_v + (1 - self.variance) * db2**2
+        self.b3_v = self.variance * self.b3_v + (1 - self.variance) * db3**2
+        
+        # Correct variance & bias & update the parameters
+        self.W1 -= learning_rate * (self.W1_m / (1 - self.momentum**t)) / (np.sqrt(self.W1_v / (1 - self.variance**t)) + self.stability)
+        self.W2 -= learning_rate * (self.W2_m / (1 - self.momentum**t)) / (np.sqrt(self.W2_v / (1 - self.variance**t)) + self.stability)
+        self.W3 -= learning_rate * (self.W3_m / (1 - self.momentum**t)) / (np.sqrt(self.W3_v / (1 - self.variance**t)) + self.stability)
+        self.b1 -= learning_rate * (self.b1_m / (1 - self.momentum**t)) / (np.sqrt(self.b1_v / (1 - self.variance**t)) + self.stability)
+        self.b2 -= learning_rate * (self.b2_m / (1 - self.momentum**t)) / (np.sqrt(self.b2_v / (1 - self.variance**t)) + self.stability)
+        self.b3 -= learning_rate * (self.b3_m / (1 - self.momentum**t)) / (np.sqrt(self.b3_v / (1 - self.variance**t)) + self.stability)
+
 
     def push_update_weight(self, dW1_sum, dW2_sum, dW3_sum, db1_sum, db2_sum, db3_sum, size, learning_rate):
         dW1_avg = dW1_sum / size
@@ -159,4 +196,4 @@ class NeuralNetwork:
         self.W3 = data["W3"]
         self.b1 = data["b1"]
         self.b2 = data["b2"]
-        self.b2 = data["b3"]
+        self.b3 = data["b3"]

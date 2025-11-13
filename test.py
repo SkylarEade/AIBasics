@@ -9,7 +9,7 @@ parser.add_argument("-visualize", action="store_true", help="Visualize the test 
 args = parser.parse_args()
 (x_train, y_train),(x_test, y_test) = keras.datasets.mnist.load_data()
 nn= main.NeuralNetwork()
-nn.load_model("models/test.npz")
+nn.load_model("models/mnist_model.npz")
 correct = 0
 
 if args.visualize:
@@ -24,6 +24,7 @@ if args.visualize:
         idx = np.random.randint(0, len(x_test))
         image = x_test[idx]
         label = y_test[idx]
+        
         
         img = image.reshape(784, 1) / 255
         _, _, _, a3, _ = nn.forward_propagation(img)
