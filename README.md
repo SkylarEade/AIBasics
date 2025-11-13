@@ -10,6 +10,9 @@
 - Gradient building using Mini-Batch gradients
 
 ### How to run
-- pip install -r requirements.txt
-- python main.py
-
+```
+git clone https://github.com/SkylarEade/AIBasics.git
+cd AIBasics
+pip install -r requirements.txt
+python main.py
+```
