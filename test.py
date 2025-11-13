@@ -9,7 +9,7 @@ parser.add_argument("-visualize", action="store_true", help="Visualize the test 
 args = parser.parse_args()
 (x_train, y_train),(x_test, y_test) = keras.datasets.mnist.load_data()
 nn= main.NeuralNetwork()
-nn.load_model()
+nn.load_model("models/test.npz")
 correct = 0
 
 if args.visualize:
@@ -26,9 +26,9 @@ if args.visualize:
         label = y_test[idx]
         
         img = image.reshape(784, 1) / 255
-        _, a2, _ = nn.forward_propagation(img)
-        guess = np.argmax(a2)
-        confidence = a2[guess, 0] * 100
+        _, _, _, a3, _ = nn.forward_propagation(img)
+        guess = np.argmax(a3)
+        confidence = a3[guess, 0] * 100
         
         ax.imshow(image, cmap='binary', interpolation='nearest')
         
@@ -66,8 +66,8 @@ else:
         y_one_hot = np.zeros((10,1))
         y_one_hot[y_test[i]] = 1
         img = image.reshape(784, 1) / 255
-        _, a2, _ = nn.forward_propagation(img)
-        guess = np.argmax(a2)
+        _, _, _, a3, _ = nn.forward_propagation(img)
+        guess = np.argmax(a3)
         if guess == y_test[i]:
             correct += 1
     print(f"\n{'='*60}")
