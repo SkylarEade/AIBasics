@@ -28,4 +28,4 @@ python test.py
 # OR TO VISUALIZE THIS TEST (on ten random samples):
 python test.py -visualize
 ```
-![Visual of Predictions](.assets/image.png)
+<img width="1495" height="593" alt="image" src="https://github.com/user-attachments/assets/45d0786d-31bc-41fc-95d9-3f6b3406b1b2" />
