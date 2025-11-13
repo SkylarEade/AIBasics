@@ -53,8 +53,8 @@ class NeuralNetwork:
 
         The chain rule will be used for the rest of the derivates, so in this case dL/dz2 = dL/da2 x da2/dz2
         Calculating da2/dz2 we will use the sigmoid derivative property which states if a = sigmoid(z) then:
-        derivate = a * (1-a)
-        Since we have dL/da2 alreadt calculate (see above) we will write this out as dL_da2 * a2 * (1 - a2)
+        derivative = a * (1-a)
+        Since we have dL/da2 already calculate (see above) we will write this out as dL_da2 * a2 * (1 - a2)
 
         For dL/DW2 we know that z2 = W2.T @ a1 + b2, using the chain rule we can write the derivate as:
         dL/dW2 = dL/dz2 * dz2/dW2
@@ -132,6 +132,16 @@ class NeuralNetwork:
             print(f"Epoch {epoch+1}/{epochs} completed:\nAverage Loss: {(epoch_loss/len(X_train)):.4f}\nAccuracy: {(epoch_correct/len(X_train) * 100):.2f}%")
             print(f"{'='*60}\n")
 
+    def save_model(self, filepath="models/mnist_model.npz"):
+        np.savez(filepath, W1=self.W1, W2=self.W2, b1=self.b1, b2=self.b2)
+        print(f"Model saved to {filepath}")
+    
+    def load_model(self, filepath="models/mnist_model.npz"):
+        data = np.load(filepath)
+        self.W1 = data["W1"]
+        self.W2 = data["W2"]
+        self.b1 = data["b1"]
+        self.b2 = data["b2"]
 
     
 
@@ -141,3 +151,5 @@ epochs = 10
 learning_rate = 0.1
 batch_size = 32
 nn.train(x_train, y_train, epochs, learning_rate, batch_size)
+filepath = "models/mnist_model.npz"
+nn.save_model(filepath)
