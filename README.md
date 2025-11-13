@@ -29,7 +29,3 @@ python test.py
 # OR TO VISUALIZE THIS TEST (on ten random samples):
 python test.py -visualize
 ```
-=======
-```
-
->>>>>>> 3ea99caad728739eb1d4c8874a83b9b345c9c572
