@@ -22,4 +22,8 @@ To train run:
 ```
 python train.py
 ```
+To run test on unseen data run:
+```
+python test.py
+```
 
