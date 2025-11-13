@@ -1,6 +1,9 @@
 # Machine Learning Handwritten Number Analyzer
 
-**Starter project for understanding basic machine learning structure and algorithms**
+**Starter project for understanding basic machine learning structure and algorithms made completely from scratch using only numpy**
+
+### What it Does
+Trains and saves a neural network that can detect what number is depicted in a handwritten image
 
 ### Lessons learned
 - Fundamental concepts like weights and biases
